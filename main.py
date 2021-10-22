@@ -3,6 +3,51 @@ import matplotlib.pyplot as plt
 import numpy
 
 
+class Func:
+    def __init__(self, num, x0, delta, x_min, x_max):
+        self.num = num
+        self.x0 = x0
+        self.delta = delta
+        self.x_min = x_min
+        self.x_max = x_max
+        self.rng = 1000
+        self.step = (x_max-x_min)/self.rng
+        self.x_values = get_x_values(self.step, self.rng, self.x_min)
+        self.fx_values = get_fx_values(self.x_values, self.num, 'fx', self.delta)
+        self.dxfx_values = get_fx_values(self.x_values, self.num, 'dxfx', self.delta)
+        self.gx_values = get_fx_values(self.x_values, self.num, 'gx', self.delta)
+        self.ex_values = get_fx_values(self.x_values, self.num, 'ex', self.delta)
+
+
+def get_x_values(step, rng, x_min):
+    i = 0
+    x_values = []
+    while i < rng:
+        x_values.append(x_min+i*step)
+        i += 1
+    return numpy.array(x_values)
+
+
+def get_fx_values(x_values, num, func, delta):
+    values = []
+    match func:
+        case 'fx':
+            for n in x_values:
+                values.append(f(n, num))
+        case 'dxfx':
+            for n in x_values:
+                values.append(dxf(n, num))
+        case 'gx':
+            for n in x_values:
+                values.append(g(n, delta, num))
+        case 'ex':
+            for n in x_values:
+                values.append(e(n, delta, num))
+        case _:
+            raise ValueError('Unexpected input, accepted func values are: [fx, dxfx, gx, ex]')
+    return numpy.array(values)
+
+
 def f(x, o):
     match o:
         case 1:
@@ -35,39 +80,21 @@ def g(x, d, o):
     return (f(x+d, o)-f(x, o))/d
 
 
-x0 = 1
-fx = 3
-delta = 0.1
-rng = 1000
-x_min = -2
-x_max = 2
-step = (x_max-x_min)/rng
-x_values = []
-fx_values = []
-dxfx_values = []
-gx_values = []
+def e(x, d, o):
+    return math.fabs(dxf(x, o)-g(x, d, o))
 
-i = 0
-while i < rng:
-    x_values.append(x_min+i*step)
-    i += 1
 
-for n in x_values:
-    fx_values.append(f(n, fx))
+funcs = [Func(1, 1, 0.1, 0, 2),
+         Func(2, math.pi/4, 0.1, 0, 2+math.pi),
+         Func(3, 1, 0.1, -2, 2),
+         Func(4, 5, 0.1, 0, 10)]
 
-for n in x_values:
-    dxfx_values.append(dxf(n, fx))
+for f in funcs:
+    plt.figure(f.num)
+    plt.plot(f.x_values, f.fx_values, 'r-', label='f(x)')
+    plt.plot(f.x_values, f.dxfx_values, 'y-', label='f\'(x)')
+    plt.plot(f.x_values, f.gx_values, 'b--', label='g(x)')
+    plt.plot(f.x_values, f.ex_values, 'g--', label='e(x)')
+    plt.legend()
 
-for n in x_values:
-    gx_values.append(g(n, delta, fx))
-
-print(f(x0, fx))
-print(dxf(x0, fx))
-plt.plot(
-    numpy.array(x_values), numpy.array(fx_values), 'r',
-    numpy.array(x_values), numpy.array(dxfx_values), 'y',
-    numpy.array(x_values), numpy.array(gx_values)
-)
-# plt.ylabel('some numbers')
-# plt.xlabel('Some other numbers')
 plt.show()
