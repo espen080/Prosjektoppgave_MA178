@@ -83,11 +83,12 @@ def g(x, d, o):
 def e(x, d, o):
     return math.fabs(dxf(x, o)-g(x, d, o))
 
+delt = float(input('Select function delta: '))
 
-funcs = [Func(1, 1, 0.1, 0, 2),
-         Func(2, math.pi/4, 0.1, 0, 2+math.pi),
-         Func(3, 1, 0.1, -2, 2),
-         Func(4, 5, 0.1, 0, 10)]
+funcs = [Func(1, 1, delt, 0, 2),
+         Func(2, math.pi/4, delt, 0, 2+math.pi),
+         Func(3, 1, delt, -2, 2),
+         Func(4, 5, delt, 0, 10)]
 
 for f in funcs:
     plt.figure(f.num)
@@ -95,6 +96,7 @@ for f in funcs:
     plt.plot(f.x_values, f.dxfx_values, 'y-', label='f\'(x)')
     plt.plot(f.x_values, f.gx_values, 'b--', label='g(x)')
     plt.plot(f.x_values, f.ex_values, 'g--', label='e(x)')
+    plt.grid()
     plt.legend()
 
 plt.show()
