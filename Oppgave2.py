@@ -28,7 +28,6 @@ Ex = 10**(-12)
 r = -3
 i = r
 while(i<-r):
-    print('X0 = {:.1f}'.format(i))
     p = getZeroPoint(i,Ex)
-    print('Nullpunkt = {:.3f}'.format(p))
+    print('X0 = {:.1f} => Nullpunkt = {:.3f}'.format(i,p))
     i +=0.1
