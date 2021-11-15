@@ -95,7 +95,7 @@ for f in funcs:
     plt.plot(f.x_values, f.fx_values, 'r-', label='f(x)')
     plt.plot(f.x_values, f.dxfx_values, 'y-', label='f\'(x)')
     plt.plot(f.x_values, f.gx_values, 'b--', label='g(x)')
-    #plt.plot(f.x_values, f.ex_values, 'g--', label='e(x)')
+    plt.plot(f.x_values, f.ex_values, 'g--', label='e(x)')
     plt.grid()
     plt.legend()
     #plt.figure(str(f.num)+' e')
